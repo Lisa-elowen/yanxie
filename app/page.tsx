@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Particles from '../components/particles'
 
-const FREE_DAILY_COUNT = 15
+const FREE_DAILY_COUNT = 999999
 const PRICE = 3.99
 
 type Message = {
@@ -254,11 +254,11 @@ export default function Home() {
         <div ref={endRef} />
       </div>
 
-      {/* 免费计数提示 */}
+      {/* 免费提示 */}
       {!paid && !showPaywall && (
         <div className="relative z-10 flex justify-center pb-1">
           <span className="bg-black/30 backdrop-blur-sm text-[11px] text-white/40 px-3 py-1 rounded-full">
-            今日剩余 {remaining} 条免费消息
+            当前免费开放 · 和严峫说说话吧
           </span>
         </div>
       )}
