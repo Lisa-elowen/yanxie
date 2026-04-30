@@ -74,8 +74,8 @@ export default function Particles() {
       particles.push({
         x, y,
         baseX: x, baseY: y,
-        vx: (Math.random() - 0.5) * 0.15,
-        vy: (Math.random() - 0.5) * 0.15,
+        vx: (Math.random() - 0.5) * 0.08,
+        vy: (Math.random() - 0.5) * 0.08,
         size: type === 'dust' ? Math.random() * 1.5 + 0.3 :
               type === 'twinkle' ? Math.random() * 2 + 0.8 :
               Math.random() * 3 + 1,
@@ -92,11 +92,11 @@ export default function Particles() {
       stars.push({
         x: Math.random() * canvas.width * 1.2,
         y: Math.random() * canvas.height * 0.4,
-        speed: 6 + Math.random() * 4,
-        length: 50 + Math.random() * 60,
+        speed: 3 + Math.random() * 2,
+        length: 40 + Math.random() * 50,
         opacity: 0.6 + Math.random() * 0.4,
         life: 0,
-        maxLife: 50 + Math.random() * 30,
+        maxLife: 70 + Math.random() * 40,
       })
     }
 
@@ -118,7 +118,7 @@ export default function Particles() {
 
       // ---- 流星 ----
       lastStarSpawn++
-      if (lastStarSpawn > 150 + Math.random() * 250) {
+      if (lastStarSpawn > 250 + Math.random() * 350) {
         spawnStar()
         lastStarSpawn = 0
       }
@@ -149,8 +149,8 @@ export default function Particles() {
       // ---- 粒子 ----
       particles.forEach((p) => {
         // 围绕基础位置做微小摆动
-        const waveX = Math.sin(t * 0.001 * p.speed + p.phase) * 0.3
-        const waveY = Math.cos(t * 0.001 * p.speed + p.phase) * 0.3
+        const waveX = Math.sin(t * 0.0005 * p.speed + p.phase) * 0.2
+        const waveY = Math.cos(t * 0.0005 * p.speed + p.phase) * 0.2
 
         // 鼠标避让
         const dx = p.x - mx
@@ -176,7 +176,7 @@ export default function Particles() {
 
         // 呼吸透明度
         if (p.type === 'twinkle') {
-          p.alpha = p.targetAlpha * (0.4 + 0.6 * Math.sin(t * 0.003 * p.speed + p.phase))
+          p.alpha = p.targetAlpha * (0.4 + 0.6 * Math.sin(t * 0.0015 * p.speed + p.phase))
         } else {
           p.alpha += (p.targetAlpha - p.alpha) * 0.01
         }

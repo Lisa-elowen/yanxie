@@ -153,10 +153,10 @@ body {
 
 /* ========== 浮动光晕 ========== */
 @keyframes orbFloat {
-  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.6; }
-  25% { transform: translate(30px, -20px) scale(1.1); opacity: 0.8; }
-  50% { transform: translate(-10px, -40px) scale(0.95); opacity: 0.5; }
-  75% { transform: translate(-30px, -10px) scale(1.05); opacity: 0.7; }
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+  25% { transform: translate(25px, -15px) scale(1.08); opacity: 0.7; }
+  50% { transform: translate(-8px, -30px) scale(0.95); opacity: 0.45; }
+  75% { transform: translate(-20px, -8px) scale(1.04); opacity: 0.6; }
 }
 .orb {
   position: fixed;
@@ -164,28 +164,28 @@ body {
   filter: blur(60px);
   pointer-events: none;
   z-index: 0;
-  animation: orbFloat 12s ease-in-out infinite;
+  animation: orbFloat 20s ease-in-out infinite;
 }
 .orb:nth-child(1) {
   width: 300px; height: 300px;
   background: radial-gradient(circle, rgba(34,211,238,0.18), transparent 70%);
   top: -5%; left: -5%;
   animation-delay: 0s;
-  animation-duration: 14s;
+  animation-duration: 22s;
 }
 .orb:nth-child(2) {
   width: 250px; height: 250px;
   background: radial-gradient(circle, rgba(96,165,250,0.15), transparent 70%);
   bottom: 5%; right: -8%;
-  animation-delay: -4s;
-  animation-duration: 16s;
+  animation-delay: -6s;
+  animation-duration: 25s;
 }
 .orb:nth-child(3) {
   width: 200px; height: 200px;
   background: radial-gradient(circle, rgba(167,139,250,0.12), transparent 70%);
   top: 40%; left: 55%;
-  animation-delay: -8s;
-  animation-duration: 13s;
+  animation-delay: -12s;
+  animation-duration: 22s;
 }
 
 /* ========== 流星 ========== */
