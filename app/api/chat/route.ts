@@ -98,7 +98,7 @@ export async function POST(request: NextRequest) {
           ...messages.slice(-10),
         ],
         temperature: 0.9,
-        max_tokens: 1200,
+        max_tokens: 2048,
         stream: false,
       }),
     })

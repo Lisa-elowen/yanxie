@@ -285,9 +285,9 @@ export default function Home() {
                   <div className={`relative px-[14px] py-[10px] text-[15px] leading-[1.5] break-words shadow-sm ${
                     msg.role === 'user'
                       ? 'bg-[#95ec69] text-[#191919] rounded-[18px] rounded-br-[6px]'
-                      : 'bg-white/10 backdrop-blur-md text-white/90 rounded-[18px] rounded-bl-[6px] border border-white/5 shimmer-effect overflow-hidden'
+                      : 'bg-white/10 backdrop-blur-md text-white/90 rounded-[18px] rounded-bl-[6px] border border-white/5 shimmer-effect'
                   }`}>
-                    <p className={msg.role === 'ai' && index === messages.length - 1 && !isSending ? 'typewriter-text' : ''}>{msg.content}</p>
+                    <p>{msg.content}</p>
                   </div>
                 </div>
               </div>
