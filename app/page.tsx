@@ -61,6 +61,30 @@ export default function Home() {
   const endRef = useRef<HTMLDivElement | null>(null)
   const inputRef = useRef<HTMLInputElement | null>(null)
 
+  // 密码验证
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [password, setPassword] = useState('')
+  const [authError, setAuthError] = useState('')
+
+  // 检查是否已认证（localStorage）
+  useEffect(() => {
+    const auth = localStorage.getItem('yx_auth')
+    if (auth === 'true') {
+      setIsAuthenticated(true)
+    }
+  }, [])
+
+  const handlePasswordSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (password === 'yanxie2024') {
+      setIsAuthenticated(true)
+      localStorage.setItem('yx_auth', 'true')
+      setAuthError('')
+    } else {
+      setAuthError('密码错误')
+    }
+  }
+
   // 付费状态
   const [paid, setPaidState] = useState(false)
   const [dailyCount, setDailyCountState] = useState(0)
@@ -172,6 +196,41 @@ export default function Home() {
   }
 
   const remaining = FREE_DAILY_COUNT - dailyCount
+
+  // 密码验证界面
+  if (!isAuthenticated) {
+    return (
+      <div className="h-screen w-screen bg-comic flex items-center justify-center">
+        <div className="w-full max-w-sm mx-4">
+          <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/10 p-8 text-center">
+            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center text-white text-3xl font-bold shadow-2xl shadow-cyan-500/30 mb-6 mx-auto">严</div>
+            <h2 className="text-xl font-bold text-white/90 mb-2">严峫 AI 情感伴侣</h2>
+            <p className="text-white/40 text-sm mb-6">请输入访问密码</p>
+            
+            <form onSubmit={handlePasswordSubmit}>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="输入密码..."
+                className="w-full px-4 py-3 bg-black/20 border border-white/10 rounded-xl text-white placeholder-white/30 focus:border-cyan-400/50 focus:outline-none mb-4"
+                autoFocus
+              />
+              {authError && (
+                <p className="text-red-400 text-sm mb-4">{authError}</p>
+              )}
+              <button
+                type="submit"
+                className="w-full py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-medium rounded-xl shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/40 active:scale-[0.98] transition-all"
+              >
+                进入
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="h-screen w-screen overflow-hidden bg-comic flex flex-col">
