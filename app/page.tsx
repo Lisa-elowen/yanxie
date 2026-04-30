@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
+import Particles from '../components/particles'
 
 const FREE_DAILY_COUNT = 15
 const PRICE = 3.99
@@ -175,6 +176,13 @@ export default function Home() {
   return (
     <div className="h-screen w-screen overflow-hidden bg-comic flex flex-col">
       <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a1a]/60 via-[#0a0a1a]/40 to-[#0a0a1a]/70 pointer-events-none" />
+      <div className="ambient-glow" />
+      <div className="orb" />
+      <div className="orb" />
+      <div className="orb" />
+      <div className="shooting-star" style={{ top: '8%', left: '70%', animationDelay: '0s' }} />
+      <div className="shooting-star" style={{ top: '15%', left: '85%', animationDelay: '5s' }} />
+      <Particles />
 
       {/* 顶栏 */}
       <div className="relative z-10 flex-shrink-0 bg-[#1a1a2e]/90 backdrop-blur-md border-b border-white/5">
@@ -209,7 +217,7 @@ export default function Home() {
                     msg.role === 'ai'
                       ? 'bg-gradient-to-br from-cyan-400 to-blue-600 text-white'
                       : 'bg-gradient-to-br from-gray-500 to-gray-700 text-white'
-                  }`}>
+                  } ${isSending && index === messages.length - 1 && msg.role === 'ai' ? 'avatar-ring' : ''}`}>
                     {msg.role === 'ai' ? '严' : '我'}
                   </div>
                 </div>
@@ -218,15 +226,31 @@ export default function Home() {
                   <div className={`relative px-[14px] py-[10px] text-[15px] leading-[1.5] break-words shadow-sm ${
                     msg.role === 'user'
                       ? 'bg-[#95ec69] text-[#191919] rounded-[18px] rounded-br-[6px]'
-                      : 'bg-white/10 backdrop-blur-md text-white/90 rounded-[18px] rounded-bl-[6px] border border-white/5'
+                      : 'bg-white/10 backdrop-blur-md text-white/90 rounded-[18px] rounded-bl-[6px] border border-white/5 shimmer-effect overflow-hidden'
                   }`}>
-                    <p>{msg.content}</p>
+                    <p className={msg.role === 'ai' && index === messages.length - 1 && !isSending ? 'typewriter-text' : ''}>{msg.content}</p>
                   </div>
                 </div>
               </div>
             </div>
           )
         })}
+        {isSending && (
+          <div className="flex items-end gap-2 px-1 rise-up">
+            <div className="flex-shrink-0">
+              <div className="w-[36px] h-[36px] rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center text-[11px] font-bold text-white shadow-md avatar-ring">
+                严
+              </div>
+            </div>
+            <div className="bg-white/10 backdrop-blur-md border border-white/5 rounded-[18px] rounded-bl-[6px] px-5 py-3.5">
+              <div className="flex items-center gap-1.5">
+                <span className="typing-dot" />
+                <span className="typing-dot" />
+                <span className="typing-dot" />
+              </div>
+            </div>
+          </div>
+        )}
         <div ref={endRef} />
       </div>
 
@@ -243,7 +267,7 @@ export default function Home() {
       {!showPaywall && (
         <div className="relative z-10 flex-shrink-0 bg-[#1a1a2e]/90 backdrop-blur-md border-t border-white/5 px-3 py-2.5">
           <div className="flex items-center gap-2">
-            <div className="flex-1 flex items-center bg-black/20 rounded-[22px] border border-white/5 focus-within:border-cyan-400/30 transition-all">
+            <div className="msg-input flex-1 flex items-center bg-black/20 rounded-[22px] border border-white/5 focus-within:border-cyan-400/30 transition-all">
               <input
                 ref={inputRef}
                 type="text"
@@ -290,7 +314,7 @@ export default function Home() {
             </div>
 
             {payStep === 'idle' && (
-              <div className="bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 p-6 mb-4">
+              <div className="pay-card bg-white/5 backdrop-blur-md rounded-2xl border neon-border p-6 mb-4">
                 <div className="text-center mb-4">
                   <span className="text-4xl font-bold text-white">¥{PRICE}</span>
                   <span className="text-white/40 text-sm ml-1">.00</span>

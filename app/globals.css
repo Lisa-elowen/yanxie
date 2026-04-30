@@ -25,7 +25,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* 破云漫画背景 - 深蓝城市夜景风格 */
+/* 破云漫画背景 */
 .bg-comic {
   background-image:
     linear-gradient(180deg, rgba(10, 10, 26, 0.50) 0%, rgba(10, 10, 26, 0.65) 100%),
@@ -35,46 +35,274 @@ body {
   background-attachment: fixed;
 }
 
-/* 微信风格滚动条 */
-::-webkit-scrollbar {
-  width: 4px;
+/* ========== 粒子画布 ========== */
+#particle-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
 }
 
-::-webkit-scrollbar-track {
-  background: transparent;
-}
+/* ========== 滚动条 ========== */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 4px; }
 
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 4px;
+/* ========== 消息入场动画 ========== */
+@keyframes msgIn {
+  0% { opacity: 0; transform: translateY(20px) scale(0.92); }
+  60% { transform: translateY(-2px) scale(1.01); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
 }
-
-/* 消息气泡动画 */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(12px) scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
 .msg-animate {
-  animation: fadeInUp 0.3s ease-out;
+  animation: msgIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
-/* 输入框占位符 */
+/* ========== 打字光标 ========== */
+.typing-cursor::after {
+  content: '|';
+  animation: blink 0.8s step-end infinite;
+  color: rgba(255,255,255,0.5);
+  font-weight: 300;
+}
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+/* ========== 渐入动画 ========== */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.fade-in {
+  animation: fadeIn 0.6s ease-out forwards;
+}
+
+/* ========== 缩放弹入 ========== */
+@keyframes bounceIn {
+  0% { opacity: 0; transform: scale(0.85); }
+  70% { transform: scale(1.03); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.bounce-in {
+  animation: bounceIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* ========== 漂浮动画 ========== */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+.float-anim {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* ========== 呼吸光晕 ========== */
+@keyframes breathe {
+  0%, 100% { box-shadow: 0 0 20px rgba(34, 211, 238, 0.15); }
+  50% { box-shadow: 0 0 35px rgba(34, 211, 238, 0.35); }
+}
+.breathe-glow {
+  animation: breathe 2.5s ease-in-out infinite;
+}
+
+/* ========== 输入框占位符 ========== */
 .input-placeholder::placeholder {
   color: #8e8e8e;
   font-size: 14px;
 }
 
-/* 消息时间戳样式 */
-.timestamp {
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.3);
-  text-align: center;
-  margin-bottom: 8px;
+/* ========== 消息气泡悬停微效 ========== */
+.msg-bubble {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.msg-bubble:hover {
+  transform: scale(1.01);
+}
+
+/* ========== 付费墙卡片入场 ========== */
+@keyframes cardSlideUp {
+  from { opacity: 0; transform: translateY(40px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.pay-card {
+  animation: cardSlideUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* ========== 霓虹边框动画 ========== */
+@keyframes neonPulse {
+  0%, 100% { border-color: rgba(34, 211, 238, 0.15); }
+  50% { border-color: rgba(34, 211, 238, 0.4); }
+}
+.neon-border {
+  animation: neonPulse 3s ease-in-out infinite;
+}
+
+/* ========== 成功勾号动画 ========== */
+@keyframes checkDraw {
+  to { stroke-dashoffset: 0; }
+}
+.check-path {
+  stroke-dasharray: 50;
+  stroke-dashoffset: 50;
+  animation: checkDraw 0.6s ease-out 0.3s forwards;
+}
+
+/* ========== 浮动光晕 ========== */
+@keyframes orbFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.7; }
+  25% { transform: translate(40px, -30px) scale(1.15); opacity: 0.9; }
+  50% { transform: translate(-15px, -50px) scale(0.95); opacity: 0.6; }
+  75% { transform: translate(-40px, -15px) scale(1.1); opacity: 0.8; }
+}
+.orb {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(50px);
+  pointer-events: none;
+  z-index: 0;
+  animation: orbFloat 8s ease-in-out infinite;
+}
+.orb:nth-child(1) {
+  width: 350px; height: 350px;
+  background: radial-gradient(circle, rgba(34,211,238,0.25), rgba(34,211,238,0.05) 50%, transparent 70%);
+  top: -5%; left: -5%;
+  animation-delay: 0s;
+  animation-duration: 10s;
+}
+.orb:nth-child(2) {
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(96,165,250,0.2), rgba(96,165,250,0.05) 50%, transparent 70%);
+  bottom: 5%; right: -8%;
+  animation-delay: -3s;
+  animation-duration: 12s;
+}
+.orb:nth-child(3) {
+  width: 250px; height: 250px;
+  background: radial-gradient(circle, rgba(167,139,250,0.18), rgba(167,139,250,0.05) 50%, transparent 70%);
+  top: 40%; left: 55%;
+  animation-delay: -6s;
+  animation-duration: 9s;
+}
+
+/* ========== 流星 ========== */
+@keyframes shootingStar {
+  0% { transform: translateX(0) translateY(0) rotate(-35deg); opacity: 1; }
+  60% { opacity: 1; }
+  100% { transform: translateX(-400px) translateY(280px) rotate(-35deg); opacity: 0; }
+}
+.shooting-star {
+  position: fixed;
+  width: 3px;
+  height: 3px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 0 8px 3px rgba(100,200,255,0.6), 0 0 20px 6px rgba(100,200,255,0.2);
+  pointer-events: none;
+  z-index: 0;
+  animation: shootingStar 3s ease-in-out infinite;
+  opacity: 0;
+}
+.shooting-star::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100px;
+  height: 2px;
+  background: linear-gradient(to left, rgba(180,220,255,0.8), transparent);
+  transform: rotate(0deg);
+  transform-origin: right center;
+}
+
+/* ========== 打字指示器 ========== */
+@keyframes dotPulse {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.3; }
+  40% { transform: scale(1); opacity: 1; }
+}
+.typing-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.5);
+  display: inline-block;
+  animation: dotPulse 1.4s ease-in-out infinite;
+}
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+/* ========== 气泡光泽扫光 ========== */
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+.shimmer-effect::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255,255,255,0.06) 30%,
+    rgba(255,255,255,0.1) 50%,
+    rgba(255,255,255,0.06) 70%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* ========== 呼吸光环 ========== */
+@keyframes ringPulse {
+  0% { box-shadow: 0 0 0 0 rgba(34, 211, 238, 0.4); }
+  70% { box-shadow: 0 0 0 12px rgba(34, 211, 238, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(34, 211, 238, 0); }
+}
+.avatar-ring {
+  animation: ringPulse 2s ease-out infinite;
+}
+
+/* ========== 打字机逐字出现 ========== */
+@keyframes typeReveal {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+.typewriter-text {
+  display: inline;
+  animation: typeReveal 0.6s steps(20, end) forwards;
+  white-space: pre-wrap;
+}
+
+/* ========== 淡入上升 ========== */
+@keyframes riseUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.rise-up {
+  animation: riseUp 0.5s ease-out forwards;
+}
+
+/* ========== 输入框聚焦光晕 ========== */
+@keyframes inputGlow {
+  0%, 100% { box-shadow: 0 0 5px rgba(34, 211, 238, 0.05); }
+  50% { box-shadow: 0 0 15px rgba(34, 211, 238, 0.15); }
+}
+.msg-input:focus-within {
+  animation: inputGlow 2s ease-in-out infinite;
+}
+
+/* ========== 光晕叠加层 ========== */
+.ambient-glow {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(34,211,238,0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(96,165,250,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(167,139,250,0.07) 0%, transparent 50%);
 }
