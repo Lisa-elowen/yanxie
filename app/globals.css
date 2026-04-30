@@ -153,39 +153,39 @@ body {
 
 /* ========== 浮动光晕 ========== */
 @keyframes orbFloat {
-  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.7; }
-  25% { transform: translate(40px, -30px) scale(1.15); opacity: 0.9; }
-  50% { transform: translate(-15px, -50px) scale(0.95); opacity: 0.6; }
-  75% { transform: translate(-40px, -15px) scale(1.1); opacity: 0.8; }
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.6; }
+  25% { transform: translate(30px, -20px) scale(1.1); opacity: 0.8; }
+  50% { transform: translate(-10px, -40px) scale(0.95); opacity: 0.5; }
+  75% { transform: translate(-30px, -10px) scale(1.05); opacity: 0.7; }
 }
 .orb {
   position: fixed;
   border-radius: 50%;
-  filter: blur(50px);
+  filter: blur(60px);
   pointer-events: none;
   z-index: 0;
-  animation: orbFloat 8s ease-in-out infinite;
+  animation: orbFloat 12s ease-in-out infinite;
 }
 .orb:nth-child(1) {
-  width: 350px; height: 350px;
-  background: radial-gradient(circle, rgba(34,211,238,0.25), rgba(34,211,238,0.05) 50%, transparent 70%);
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(34,211,238,0.18), transparent 70%);
   top: -5%; left: -5%;
   animation-delay: 0s;
-  animation-duration: 10s;
+  animation-duration: 14s;
 }
 .orb:nth-child(2) {
-  width: 300px; height: 300px;
-  background: radial-gradient(circle, rgba(96,165,250,0.2), rgba(96,165,250,0.05) 50%, transparent 70%);
+  width: 250px; height: 250px;
+  background: radial-gradient(circle, rgba(96,165,250,0.15), transparent 70%);
   bottom: 5%; right: -8%;
-  animation-delay: -3s;
-  animation-duration: 12s;
+  animation-delay: -4s;
+  animation-duration: 16s;
 }
 .orb:nth-child(3) {
-  width: 250px; height: 250px;
-  background: radial-gradient(circle, rgba(167,139,250,0.18), rgba(167,139,250,0.05) 50%, transparent 70%);
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(167,139,250,0.12), transparent 70%);
   top: 40%; left: 55%;
-  animation-delay: -6s;
-  animation-duration: 9s;
+  animation-delay: -8s;
+  animation-duration: 13s;
 }
 
 /* ========== 流星 ========== */
@@ -196,14 +196,14 @@ body {
 }
 .shooting-star {
   position: fixed;
-  width: 3px;
-  height: 3px;
+  width: 2px;
+  height: 2px;
   background: white;
   border-radius: 50%;
-  box-shadow: 0 0 8px 3px rgba(100,200,255,0.6), 0 0 20px 6px rgba(100,200,255,0.2);
+  box-shadow: 0 0 4px 1px rgba(100,200,255,0.3);
   pointer-events: none;
   z-index: 0;
-  animation: shootingStar 3s ease-in-out infinite;
+  animation: shootingStar 4s ease-in-out infinite;
   opacity: 0;
 }
 .shooting-star::after {
@@ -211,9 +211,9 @@ body {
   position: absolute;
   top: 0;
   right: 0;
-  width: 100px;
-  height: 2px;
-  background: linear-gradient(to left, rgba(180,220,255,0.8), transparent);
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(to left, rgba(180,200,255,0.4), transparent);
   transform: rotate(0deg);
   transform-origin: right center;
 }
@@ -246,24 +246,24 @@ body {
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(255,255,255,0.06) 30%,
-    rgba(255,255,255,0.1) 50%,
-    rgba(255,255,255,0.06) 70%,
+    rgba(255,255,255,0.03) 30%,
+    rgba(255,255,255,0.05) 50%,
+    rgba(255,255,255,0.03) 70%,
     transparent 100%
   );
   background-size: 200% 100%;
-  animation: shimmer 3s ease-in-out infinite;
+  animation: shimmer 5s ease-in-out infinite;
   pointer-events: none;
 }
 
 /* ========== 呼吸光环 ========== */
 @keyframes ringPulse {
-  0% { box-shadow: 0 0 0 0 rgba(34, 211, 238, 0.4); }
-  70% { box-shadow: 0 0 0 12px rgba(34, 211, 238, 0); }
+  0% { box-shadow: 0 0 0 0 rgba(34, 211, 238, 0.2); }
+  70% { box-shadow: 0 0 0 8px rgba(34, 211, 238, 0); }
   100% { box-shadow: 0 0 0 0 rgba(34, 211, 238, 0); }
 }
 .avatar-ring {
-  animation: ringPulse 2s ease-out infinite;
+  animation: ringPulse 2.5s ease-out infinite;
 }
 
 /* ========== 打字机逐字出现 ========== */
@@ -288,8 +288,8 @@ body {
 
 /* ========== 输入框聚焦光晕 ========== */
 @keyframes inputGlow {
-  0%, 100% { box-shadow: 0 0 5px rgba(34, 211, 238, 0.05); }
-  50% { box-shadow: 0 0 15px rgba(34, 211, 238, 0.15); }
+  0%, 100% { box-shadow: 0 0 5px rgba(34, 211, 238, 0); }
+  50% { box-shadow: 0 0 10px rgba(34, 211, 238, 0.05); }
 }
 .msg-input:focus-within {
   animation: inputGlow 2s ease-in-out infinite;
@@ -302,7 +302,7 @@ body {
   pointer-events: none;
   z-index: 0;
   background:
-    radial-gradient(ellipse at 20% 50%, rgba(34,211,238,0.1) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 20%, rgba(96,165,250,0.08) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 80%, rgba(167,139,250,0.07) 0%, transparent 50%);
+    radial-gradient(ellipse at 20% 50%, rgba(34,211,238,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(96,165,250,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(167,139,250,0.05) 0%, transparent 50%);
 }

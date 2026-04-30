@@ -175,7 +175,7 @@ export default function Home() {
 
   return (
     <div className="h-screen w-screen overflow-hidden bg-comic flex flex-col">
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a1a]/60 via-[#0a0a1a]/40 to-[#0a0a1a]/70 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a1a]/40 via-[#0a0a1a]/30 to-[#0a0a1a]/50 pointer-events-none" />
       <div className="ambient-glow" />
       <div className="orb" />
       <div className="orb" />

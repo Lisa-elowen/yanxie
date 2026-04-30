@@ -4,20 +4,26 @@ import { useEffect, useRef } from 'react'
 
 type Particle = {
   x: number; y: number
+  baseX: number; baseY: number  // 初始位置，用于围绕
   vx: number; vy: number
-  size: number; alpha: number; alphaDir: number
+  size: number
+  targetAlpha: number; alpha: number
+  speed: number
   color: string
+  type: 'dust' | 'twinkle' | 'drift'
+  phase: number
 }
 
 type Star = {
   x: number; y: number
   speed: number; length: number
   opacity: number; life: number; maxLife: number
-  active: boolean
 }
 
 export default function Particles() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const mouseRef = useRef({ x: -1000, y: -1000 })
+  const timeRef = useRef(0)
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -29,8 +35,7 @@ export default function Particles() {
     let particles: Particle[] = []
     let stars: Star[] = []
     let lastStarSpawn = 0
-
-    const colors = ['rgba(34,211,238,', 'rgba(96,165,250,', 'rgba(255,255,255,']
+    let burstTimer = 0
 
     const resize = () => {
       canvas.width = window.innerWidth
@@ -39,85 +44,142 @@ export default function Particles() {
     resize()
     window.addEventListener('resize', resize)
 
-    for (let i = 0; i < 120; i++) {
+    // 鼠标跟踪
+    const onMouse = (e: MouseEvent) => {
+      mouseRef.current.x = e.clientX
+      mouseRef.current.y = e.clientY
+    }
+    const onLeave = () => {
+      mouseRef.current.x = -1000
+      mouseRef.current.y = -1000
+    }
+    window.addEventListener('mousemove', onMouse)
+    window.addEventListener('mouseleave', onLeave)
+
+    const colors = [
+      { r: 34, g: 211, b: 238 },
+      { r: 96, g: 165, b: 250 },
+      { r: 147, g: 197, b: 253 },
+      { r: 167, g: 139, b: 250 },
+      { r: 255, g: 255, b: 255 },
+    ]
+
+    // 三种类型的粒子混合
+    for (let i = 0; i < 100; i++) {
+      const type: 'dust' | 'twinkle' | 'drift' =
+        i < 40 ? 'dust' : i < 70 ? 'twinkle' : 'drift'
+      const c = colors[Math.floor(Math.random() * colors.length)]
+      const x = Math.random() * canvas.width
+      const y = Math.random() * canvas.height
       particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.5,
-        vy: (Math.random() - 0.5) * 0.5,
-        size: Math.random() * 4 + 1.5,
-        alpha: Math.random() * 0.7 + 0.2,
-        alphaDir: Math.random() > 0.5 ? 0.005 : -0.005,
-        color: colors[Math.floor(Math.random() * colors.length)],
+        x, y,
+        baseX: x, baseY: y,
+        vx: (Math.random() - 0.5) * 0.15,
+        vy: (Math.random() - 0.5) * 0.15,
+        size: type === 'dust' ? Math.random() * 1.5 + 0.3 :
+              type === 'twinkle' ? Math.random() * 2 + 0.8 :
+              Math.random() * 3 + 1,
+        alpha: Math.random() * 0.25 + 0.05,
+        targetAlpha: Math.random() * 0.25 + 0.08,
+        speed: 0.2 + Math.random() * 0.4,
+        color: `rgba(${c.r},${c.g},${c.b},`,
+        type,
+        phase: Math.random() * Math.PI * 2,
       })
     }
 
     const spawnStar = () => {
-      const maxLife = 60 + Math.random() * 40
       stars.push({
         x: Math.random() * canvas.width * 1.2,
-        y: Math.random() * canvas.height * 0.5,
-        speed: 8 + Math.random() * 5,
-        length: 80 + Math.random() * 100,
-        opacity: 1,
+        y: Math.random() * canvas.height * 0.4,
+        speed: 6 + Math.random() * 4,
+        length: 50 + Math.random() * 60,
+        opacity: 0.6 + Math.random() * 0.4,
         life: 0,
-        maxLife,
-        active: true,
+        maxLife: 50 + Math.random() * 30,
       })
     }
 
-    const draw = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
+    // 偶尔颜色爆发
+    const burstColors = [
+      { r: 34, g: 211, b: 238 },
+      { r: 167, g: 139, b: 250 },
+    ]
 
-      // spawn shooting stars randomly
+    const draw = () => {
+      timeRef.current++
+      const t = timeRef.current
+      const mx = mouseRef.current.x
+      const my = mouseRef.current.y
+      const w = canvas.width
+      const h = canvas.height
+
+      ctx.clearRect(0, 0, w, h)
+
+      // ---- 流星 ----
       lastStarSpawn++
-      if (lastStarSpawn > 80 + Math.random() * 120) {
+      if (lastStarSpawn > 150 + Math.random() * 250) {
         spawnStar()
         lastStarSpawn = 0
       }
-
-      // draw & update shooting stars
       stars = stars.filter(s => s.life < s.maxLife)
       stars.forEach(s => {
         s.life++
-        const progress = s.life / s.maxLife
-        s.opacity = 1 - progress
+        const p = s.life / s.maxLife
+        const op = s.opacity * (1 - p)
         s.x -= s.speed
-        s.y += s.speed * 0.6
+        s.y += s.speed * 0.5
 
         ctx.beginPath()
         ctx.moveTo(s.x, s.y)
-        ctx.lineTo(s.x + s.length * 0.7, s.y - s.length * 0.5)
-        const grad = ctx.createLinearGradient(s.x, s.y, s.x + s.length * 0.7, s.y - s.length * 0.5)
-        grad.addColorStop(0, `rgba(255,255,255,${s.opacity})`)
-        grad.addColorStop(0.3, `rgba(180,220,255,${s.opacity * 0.7})`)
-        grad.addColorStop(1, `rgba(180,220,255,0)`)
+        ctx.lineTo(s.x + s.length * 0.6, s.y - s.length * 0.4)
+        const grad = ctx.createLinearGradient(s.x, s.y, s.x + s.length * 0.6, s.y - s.length * 0.4)
+        grad.addColorStop(0, `rgba(200,220,255,${op * 0.6})`)
+        grad.addColorStop(1, `rgba(200,220,255,0)`)
         ctx.strokeStyle = grad
-        ctx.lineWidth = 2.5
+        ctx.lineWidth = 1.2
         ctx.stroke()
 
-        // bright head
         ctx.beginPath()
-        ctx.arc(s.x, s.y, 3, 0, Math.PI * 2)
-        ctx.fillStyle = `rgba(255,255,255,${s.opacity})`
-        ctx.fill()
-        ctx.beginPath()
-        ctx.arc(s.x, s.y, 8, 0, Math.PI * 2)
-        ctx.fillStyle = `rgba(200,230,255,${s.opacity * 0.3})`
+        ctx.arc(s.x, s.y, 1.8, 0, Math.PI * 2)
+        ctx.fillStyle = `rgba(200,220,255,${op * 0.7})`
         ctx.fill()
       })
 
-      // draw particles
+      // ---- 粒子 ----
       particles.forEach((p) => {
+        // 围绕基础位置做微小摆动
+        const waveX = Math.sin(t * 0.001 * p.speed + p.phase) * 0.3
+        const waveY = Math.cos(t * 0.001 * p.speed + p.phase) * 0.3
+
+        // 鼠标避让
+        const dx = p.x - mx
+        const dy = p.y - my
+        const dist = Math.sqrt(dx * dx + dy * dy)
+        let mouseFx = 0, mouseFy = 0
+        if (dist < 120 && dist > 0) {
+          const force = (120 - dist) / 120 * 0.6
+          mouseFx = (dx / dist) * force
+          mouseFy = (dy / dist) * force
+        }
+
+        p.vx += (waveX - p.vx * 0.02) + mouseFx * 0.05
+        p.vy += (waveY - p.vy * 0.02) + mouseFy * 0.05
         p.x += p.vx
         p.y += p.vy
-        p.alpha += p.alphaDir
-        if (p.alpha > 0.6 || p.alpha < 0.05) p.alphaDir *= -1
 
-        if (p.x < 0) p.x = canvas.width
-        if (p.x > canvas.width) p.x = 0
-        if (p.y < 0) p.y = canvas.height
-        if (p.y > canvas.height) p.y = 0
+        // 边界回绕
+        if (p.x < -10) p.x = w + 10
+        if (p.x > w + 10) p.x = -10
+        if (p.y < -10) p.y = h + 10
+        if (p.y > h + 10) p.y = -10
+
+        // 呼吸透明度
+        if (p.type === 'twinkle') {
+          p.alpha = p.targetAlpha * (0.4 + 0.6 * Math.sin(t * 0.003 * p.speed + p.phase))
+        } else {
+          p.alpha += (p.targetAlpha - p.alpha) * 0.01
+        }
 
         ctx.beginPath()
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2)
@@ -125,18 +187,20 @@ export default function Particles() {
         ctx.fill()
       })
 
-      // draw connections
+      // ---- 连线（仅dust类粒子之间，更淡）----
       for (let i = 0; i < particles.length; i++) {
+        if (particles[i].type !== 'dust') continue
         for (let j = i + 1; j < particles.length; j++) {
+          if (particles[j].type !== 'dust') continue
           const dx = particles[i].x - particles[j].x
           const dy = particles[i].y - particles[j].y
           const dist = Math.sqrt(dx * dx + dy * dy)
-          if (dist < 150) {
+          if (dist < 100) {
             ctx.beginPath()
             ctx.moveTo(particles[i].x, particles[i].y)
             ctx.lineTo(particles[j].x, particles[j].y)
-            ctx.strokeStyle = `rgba(34,211,238,${(1 - dist / 150) * 0.15})`
-            ctx.lineWidth = 0.8
+            ctx.strokeStyle = `rgba(34,211,238,${(1 - dist / 100) * 0.06})`
+            ctx.lineWidth = 0.5
             ctx.stroke()
           }
         }
@@ -149,6 +213,8 @@ export default function Particles() {
     return () => {
       cancelAnimationFrame(animId)
       window.removeEventListener('resize', resize)
+      window.removeEventListener('mousemove', onMouse)
+      window.removeEventListener('mouseleave', onLeave)
     }
   }, [])
 
