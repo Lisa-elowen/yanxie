@@ -52,7 +52,7 @@ export default function Home() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'ai',
-      content: '我是严峫，建宁县公安局刑侦支队队长。无论你在黑夜里经历了什么，我会尽力让你看到天亮。',
+      content: '啧，有人找我？行吧——我是严峫，建宁市公安局刑侦支队副支队长。看你这样儿，有事儿？说吧，我听着。',
       time: getTime(),
     },
   ])
@@ -81,7 +81,7 @@ export default function Home() {
       localStorage.setItem('yx_auth', 'true')
       setAuthError('')
     } else {
-      setAuthError('密码错误')
+      setAuthError('暗号不对，再想想？')
     }
   }
 
@@ -204,15 +204,15 @@ export default function Home() {
         <div className="w-full max-w-sm mx-4">
           <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/10 p-8 text-center">
             <div className="w-20 h-20 rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center text-white text-3xl font-bold shadow-2xl shadow-cyan-500/30 mb-6 mx-auto">严</div>
-            <h2 className="text-xl font-bold text-white/90 mb-2">严峫 AI 情感伴侣</h2>
-            <p className="text-white/40 text-sm mb-6">请输入访问密码</p>
+            <h2 className="text-xl font-bold text-white/90 mb-2">严峫</h2>
+            <p className="text-white/40 text-sm mb-6">建宁市公安局刑侦支队 · 来访登记</p>
             
             <form onSubmit={handlePasswordSubmit}>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="输入密码..."
+                placeholder="暗号？"
                 className="w-full px-4 py-3 bg-black/20 border border-white/10 rounded-xl text-white placeholder-white/30 focus:border-cyan-400/50 focus:outline-none mb-4"
                 autoFocus
               />
@@ -223,7 +223,7 @@ export default function Home() {
                 type="submit"
                 className="w-full py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-medium rounded-xl shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/40 active:scale-[0.98] transition-all"
               >
-                进入
+                开门
               </button>
             </form>
           </div>
@@ -250,7 +250,7 @@ export default function Home() {
             <div className="w-[34px] h-[34px] rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center text-white text-xs font-bold shadow-lg shadow-cyan-500/20">严</div>
             <div>
               <h1 className="text-[15px] font-medium text-white/95 tracking-wide">严峫</h1>
-              <p className="text-[10px] text-white/40 -mt-0.5">建宁县公安局 刑侦支队队长</p>
+              <p className="text-[10px] text-white/40 -mt-0.5">建宁市公安局 刑侦支队副支队长</p>
             </div>
           </div>
           <div className="ml-auto flex items-center gap-2">
@@ -317,7 +317,7 @@ export default function Home() {
       {!paid && !showPaywall && (
         <div className="relative z-10 flex justify-center pb-1">
           <span className="bg-black/30 backdrop-blur-sm text-[11px] text-white/40 px-3 py-1 rounded-full">
-            当前免费开放 · 和严峫说说话吧
+            免费开放中 · 有话就说，我听着
           </span>
         </div>
       )}
@@ -333,7 +333,7 @@ export default function Home() {
                 value={input}
                 onChange={e => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder={paid ? "说出你的心事..." : `说出你的心事...`}
+                placeholder={paid ? "想说啥就说啥..." : `想说啥就说啥...`}
                 className="flex-1 bg-transparent px-4 py-2.5 text-[15px] text-white/90 outline-none input-placeholder"
                 maxLength={500}
               />
@@ -368,8 +368,8 @@ export default function Home() {
           <div className="w-full max-w-sm mx-4">
             <div className="flex flex-col items-center mb-6">
               <div className="w-20 h-20 rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center text-white text-3xl font-bold shadow-2xl shadow-cyan-500/30 mb-4">严</div>
-              <h2 className="text-xl font-bold text-white/90">解锁与严峫畅聊</h2>
-              <p className="text-sm text-white/40 mt-1 text-center">今日免费消息已用完 · 每天{ FREE_DAILY_COUNT }条免费</p>
+              <h2 className="text-xl font-bold text-white/90">请严峫抽根烟</h2>
+              <p className="text-sm text-white/40 mt-1 text-center">今日免费次数已用完 · 每天{ FREE_DAILY_COUNT }条免费</p>
             </div>
 
             {payStep === 'idle' && (
@@ -377,10 +377,10 @@ export default function Home() {
                 <div className="text-center mb-4">
                   <span className="text-4xl font-bold text-white">¥{PRICE}</span>
                   <span className="text-white/40 text-sm ml-1">.00</span>
-                  <p className="text-white/30 text-xs mt-1">一杯奶茶的价格，永久畅聊</p>
+                  <p className="text-white/30 text-xs mt-1">一包烟钱，永久畅聊</p>
                 </div>
                 <div className="space-y-2.5 mb-5">
-                  {['无限消息，不限次数', '永久有效，无续费', '支持严峫继续陪伴更多人'].map((text, i) => (
+                  {['不限次数，随便唠', '永久有效，不续费', '给严峫买包烟抽抽'].map((text, i) => (
                     <div key={i} className="flex items-center gap-2.5">
                       <div className="w-5 h-5 rounded-full bg-cyan-500/20 flex items-center justify-center flex-shrink-0">
                         <svg className="w-3 h-3 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" /></svg>
@@ -390,10 +390,10 @@ export default function Home() {
                   ))}
                 </div>
                 <button onClick={handlePay} className="w-full py-3 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-medium text-base shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/40 active:scale-[0.98] transition-all">
-                  立即解锁 ¥{PRICE}
+                  买包烟 ¥{PRICE}
                 </button>
                 <button onClick={() => setShowPaywall(false)} className="w-full mt-2 py-2 text-sm text-white/30 hover:text-white/50 text-center transition-colors">
-                  明天再来
+                  明儿再来
                 </button>
               </div>
             )}
@@ -421,8 +421,8 @@ export default function Home() {
                 <div className="w-16 h-16 rounded-full bg-green-500/10 flex items-center justify-center mx-auto mb-4">
                   <svg className="w-8 h-8 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                 </div>
-                <p className="text-white font-medium text-lg mb-1">解锁成功！</p>
-                <p className="text-white/40 text-sm">感谢你的支持，尽情和严峫聊天吧</p>
+                <p className="text-white font-medium text-lg mb-1">烟钱收到了！</p>
+                <p className="text-white/40 text-sm">得嘞，有啥话你尽管说，我陪你唠</p>
               </div>
             )}
           </div>
