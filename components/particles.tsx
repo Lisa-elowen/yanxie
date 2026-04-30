@@ -74,14 +74,13 @@ export default function Particles() {
       particles.push({
         x, y,
         baseX: x, baseY: y,
-        vx: (Math.random() - 0.5) * 0.08,
-        vy: (Math.random() - 0.5) * 0.08,
-        size: type === 'dust' ? Math.random() * 1.5 + 0.3 :
-              type === 'twinkle' ? Math.random() * 2 + 0.8 :
-              Math.random() * 3 + 1,
-        alpha: Math.random() * 0.25 + 0.05,
-        targetAlpha: Math.random() * 0.25 + 0.08,
-        speed: 0.2 + Math.random() * 0.4,
+        vx: 0, vy: 0,
+        size: type === 'dust' ? Math.random() * 1.2 + 0.3 :
+              type === 'twinkle' ? Math.random() * 1.5 + 0.5 :
+              Math.random() * 2 + 0.8,
+        alpha: Math.random() * 0.2 + 0.05,
+        targetAlpha: Math.random() * 0.2 + 0.08,
+        speed: 0.03 + Math.random() * 0.06,
         color: `rgba(${c.r},${c.g},${c.b},`,
         type,
         phase: Math.random() * Math.PI * 2,
@@ -91,12 +90,12 @@ export default function Particles() {
     const spawnStar = () => {
       stars.push({
         x: Math.random() * canvas.width * 1.2,
-        y: Math.random() * canvas.height * 0.4,
-        speed: 3 + Math.random() * 2,
-        length: 40 + Math.random() * 50,
-        opacity: 0.6 + Math.random() * 0.4,
+        y: Math.random() * canvas.height * 0.3,
+        speed: 0.8 + Math.random() * 0.6,
+        length: 30 + Math.random() * 30,
+        opacity: 0.4 + Math.random() * 0.3,
         life: 0,
-        maxLife: 70 + Math.random() * 40,
+        maxLife: 100 + Math.random() * 60,
       })
     }
 
@@ -118,7 +117,7 @@ export default function Particles() {
 
       // ---- 流星 ----
       lastStarSpawn++
-      if (lastStarSpawn > 250 + Math.random() * 350) {
+      if (lastStarSpawn > 400 + Math.random() * 400) {
         spawnStar()
         lastStarSpawn = 0
       }
@@ -148,35 +147,35 @@ export default function Particles() {
 
       // ---- 粒子 ----
       particles.forEach((p) => {
-        // 围绕基础位置做微小摆动
-        const waveX = Math.sin(t * 0.0005 * p.speed + p.phase) * 0.2
-        const waveY = Math.cos(t * 0.0005 * p.speed + p.phase) * 0.2
+        // 围绕基础位置做极缓慢摆动
+        const waveX = Math.sin(t * 0.00008 * p.speed + p.phase) * 0.04
+        const waveY = Math.cos(t * 0.00008 * p.speed + p.phase) * 0.04
 
         // 鼠标避让
         const dx = p.x - mx
         const dy = p.y - my
         const dist = Math.sqrt(dx * dx + dy * dy)
         let mouseFx = 0, mouseFy = 0
-        if (dist < 120 && dist > 0) {
-          const force = (120 - dist) / 120 * 0.6
+        if (dist < 100 && dist > 0) {
+          const force = (100 - dist) / 100 * 0.3
           mouseFx = (dx / dist) * force
           mouseFy = (dy / dist) * force
         }
 
-        p.vx += (waveX - p.vx * 0.02) + mouseFx * 0.05
-        p.vy += (waveY - p.vy * 0.02) + mouseFy * 0.05
+        // 回拉至基础位置（防止漂走）
+        const pullX = (p.baseX - p.x) * 0.002
+        const pullY = (p.baseY - p.y) * 0.002
+
+        p.vx += waveX + pullX + mouseFx * 0.02
+        p.vy += waveY + pullY + mouseFy * 0.02
+        p.vx *= 0.98
+        p.vy *= 0.98
         p.x += p.vx
         p.y += p.vy
 
-        // 边界回绕
-        if (p.x < -10) p.x = w + 10
-        if (p.x > w + 10) p.x = -10
-        if (p.y < -10) p.y = h + 10
-        if (p.y > h + 10) p.y = -10
-
         // 呼吸透明度
         if (p.type === 'twinkle') {
-          p.alpha = p.targetAlpha * (0.4 + 0.6 * Math.sin(t * 0.0015 * p.speed + p.phase))
+          p.alpha = p.targetAlpha * (0.4 + 0.6 * Math.sin(t * 0.0005 * p.speed + p.phase))
         } else {
           p.alpha += (p.targetAlpha - p.alpha) * 0.01
         }
