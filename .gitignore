@@ -1,0 +1,14 @@
+# 环境变量 - 包含API密钥，绝不提交
+.env.local
+.env*.local
+
+# dependencies
+node_modules/
+.next/
+
+# output
+out/
+
+# misc
+.DS_Store
+*.pem
