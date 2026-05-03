@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Particles from '../components/particles'
+import { useTextToSpeech } from '../components/useTextToSpeech'
+import { useSpeechToText } from '../components/useSpeechToText'
 
 const FREE_DAILY_COUNT = 999999
 const PRICE = 3.99
@@ -52,7 +54,7 @@ export default function Home() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'ai',
-      content: '啧，有人找我？行吧——我是严峫，建宁市公安局刑侦支队副支队长。看你这样儿，有事儿？说吧，我听着。',
+      content: '啧，来了？行吧，严峫，建宁刑侦的。看你这样儿是有话要说？说吧，我听着呢。',
       time: getTime(),
     },
   ])
@@ -60,6 +62,23 @@ export default function Home() {
   const [isSending, setIsSending] = useState(false)
   const endRef = useRef<HTMLDivElement | null>(null)
   const inputRef = useRef<HTMLInputElement | null>(null)
+
+  // 语音
+  const { speaking, speakingId, toggle: toggleTts, stop: stopTts } = useTextToSpeech()
+  const { isListening, isSupported: sttSupported, startListening, stopListening } = useSpeechToText()
+
+  // 语音输入：点击麦克风开始/结束
+  const handleMicClick = useCallback(() => {
+    if (isListening) {
+      const result = stopListening()
+      if (result) {
+        setInput(prev => prev + result)
+        inputRef.current?.focus()
+      }
+    } else {
+      startListening()
+    }
+  }, [isListening, startListening, stopListening])
 
   // 密码验证
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -281,7 +300,27 @@ export default function Home() {
                   </div>
                 </div>
                 <div className={`max-w-[72%]`}>
-                  {msg.role === 'ai' && <p className="text-[11px] text-white/30 mb-1 ml-1">严峫</p>}
+                  {msg.role === 'ai' && (
+                    <div className="flex items-center gap-1.5 mb-1 ml-1">
+                      <p className="text-[11px] text-white/30">严峫</p>
+                      <button
+                        onClick={() => toggleTts(msg.content, index)}
+                        className={`voice-btn ${speaking && speakingId === index ? 'voice-btn-active' : ''}`}
+                        title={speaking && speakingId === index ? '停止朗读' : '朗读'}
+                      >
+                        {speaking && speakingId === index ? (
+                          <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
+                            <rect x="6" y="4" width="4" height="16" rx="1" />
+                            <rect x="14" y="4" width="4" height="16" rx="1" />
+                          </svg>
+                        ) : (
+                          <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0014 8.5v7a4.49 4.49 0 002.5-3.5zM14 3.23v2.06a7.007 7.007 0 010 13.42v2.06A9.01 9.01 0 0014 3.23z" />
+                          </svg>
+                        )}
+                      </button>
+                    </div>
+                  )}
                   <div className={`relative px-[14px] py-[10px] text-[15px] leading-[1.5] break-words shadow-sm ${
                     msg.role === 'user'
                       ? 'bg-[#95ec69] text-[#191919] rounded-[18px] rounded-br-[6px]'
@@ -339,6 +378,33 @@ export default function Home() {
               />
               {input.length > 0 && (
                 <span className="text-[10px] text-white/20 pr-3">{input.length}/500</span>
+              )}
+              {sttSupported && (
+                <button
+                  onClick={handleMicClick}
+                  className={`voice-mic-btn mr-1 ${isListening ? 'voice-mic-active' : ''}`}
+                  title={isListening ? '点击停止录音' : '语音输入'}
+                >
+                  {isListening ? (
+                    <span className="relative flex items-center justify-center">
+                      <svg className="w-4 h-4 text-red-400" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 14a3 3 0 003-3V5a3 3 0 00-6 0v6a3 3 0 003 3z" />
+                        <path d="M17 11a5 5 0 01-10 0H5a7 7 0 0014 0h-2z" />
+                        <rect x="10" y="2" width="4" height="12" rx="2" />
+                      </svg>
+                      <span className="absolute inset-0 flex items-center justify-center">
+                        <span className="w-4 h-0.5 bg-red-400 rotate-45 absolute" />
+                        <span className="w-4 h-0.5 bg-red-400 -rotate-45 absolute" />
+                      </span>
+                    </span>
+                  ) : (
+                    <svg className="w-4 h-4 text-white/50 hover:text-white/80" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 14a3 3 0 003-3V5a3 3 0 00-6 0v6a3 3 0 003 3z" />
+                      <path d="M17 11a5 5 0 01-10 0H5a7 7 0 0014 0h-2z" />
+                      <rect x="10" y="19" width="4" height="2" rx="1" />
+                    </svg>
+                  )}
+                </button>
               )}
             </div>
             <button

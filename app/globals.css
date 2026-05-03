@@ -306,3 +306,47 @@ body {
     radial-gradient(ellipse at 80% 20%, rgba(96,165,250,0.06) 0%, transparent 50%),
     radial-gradient(ellipse at 50% 80%, rgba(167,139,250,0.05) 0%, transparent 50%);
 }
+
+/* ========== 语音朗读按钮 ========== */
+.voice-btn {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: pointer; transition: all 0.2s ease;
+  color: rgba(255, 255, 255, 0.35); flex-shrink: 0;
+}
+.voice-btn:hover {
+  background: rgba(34, 211, 238, 0.15);
+  border-color: rgba(34, 211, 238, 0.3);
+  color: rgba(34, 211, 238, 0.8);
+}
+.voice-btn-active {
+  background: rgba(34, 211, 238, 0.2);
+  border-color: rgba(34, 211, 238, 0.4);
+  color: #22d3ee;
+  animation: voicePulse 1.5s ease-in-out infinite;
+}
+@keyframes voicePulse {
+  0%, 100% { box-shadow: 0 0 4px rgba(34, 211, 238, 0.2); }
+  50% { box-shadow: 0 0 10px rgba(34, 211, 238, 0.4); }
+}
+
+/* ========== 麦克风按钮 ========== */
+.voice-mic-btn {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: transparent; border: none;
+  cursor: pointer; transition: all 0.2s ease; flex-shrink: 0;
+}
+.voice-mic-btn:hover { background: rgba(255, 255, 255, 0.08); }
+.voice-mic-active {
+  background: rgba(239, 68, 68, 0.15);
+  animation: micPulse 1s ease-in-out infinite;
+}
+@keyframes micPulse {
+  0%, 100% { box-shadow: 0 0 4px rgba(239, 68, 68, 0.3); }
+  50% { box-shadow: 0 0 14px rgba(239, 68, 68, 0.5); }
+}
