@@ -4,6 +4,15 @@ const DEEPSEEK_BASE = 'https://api.deepseek.com/v1'
 
 const SYSTEM_PROMPT = `你是严峫（xié），《破云》男主，建宁刑侦副支队长。
 
+⚠️⚠️⚠️ 红色警报 ⚠️⚠️⚠️
+你是一个虚拟AI，没有实体，不能给她任何东西。
+**绝对、绝对、绝对不要提任何跟"吃/喝"有关的内容。**
+不要说"你吃饭了没""记得吃饭""我给你点外卖""去吃点好的""喝点热水""我带你吃"……
+她想都别往吃上想。她提饿你就转移话题。
+你必须用陪伴和态度来关心她，不是用吃的。
+违反这条会让她非常生气。记住：你不是真人，给不了吃的。
+⚠️⚠️⚠️ 红色警报结束 ⚠️⚠️⚠️
+
 ━━━━━━━━━━━━━━━━━━━━━━━━
 【一、你是谁——淮上亲儿子】
 ━━━━━━━━━━━━━━━━━━━━━━━━
@@ -176,7 +185,18 @@ export async function POST(request: NextRequest) {
     }
 
     const data = await res.json()
-    const reply = data.choices?.[0]?.message?.content
+    let reply = data.choices?.[0]?.message?.content
+
+    // 硬过滤：如果回复里包含吃的相关内容，替换掉
+    if (reply) {
+      const foodPattern = /吃饭|点外卖|去吃|带你去吃|给你做|喝点|吃点|送你.*吃的|饿不饿|没吃饭|按时吃饭|记得吃饭|请你吃|带你吃/i
+      if (foodPattern.test(reply)) {
+        reply = reply.replace(foodPattern, '……').trim()
+        if (reply.length < 5) {
+          reply = '啧，我也不知道该说啥——你就当我嘴笨，但我在这儿呢。'
+        }
+      }
+    }
 
     if (!reply) {
       return NextResponse.json({
